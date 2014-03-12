@@ -1,35 +1,20 @@
 <?php
 
-if (isset($_SERVER['REDIRECT_URL'])) {
-	$args = explode('/', $_SERVER['REDIRECT_URL']);
-	array_shift($args);
-	array_shift($args);
+// if (isset($_POST) && isset($_POST['quote'])) {
 
-	$url = array();
+// 	if ($_POST['quote'] == "") {
+// 		die();
+// 	}
+// 	$quote = "\n".trim($_POST['quote']);
 
-	//Parsing the url as parameters
-	for ($i = 0; $i < count($args); $i++) {
-	    $k = $args[$i];
-	    $v = ++$i < count($args) ? $args[$i] : null;
-	    $url[$k]= $v;
-	}
-}
-
-if (isset($_POST) && isset($_POST['quote'])) {
-
-	if ($_POST['quote'] == "") {
-		die();
-	}
-	$quote = "\n".trim($_POST['quote']);
-
-	file_put_contents('quotes.txt', $quote, FILE_APPEND | LOCK_EX);
+// 	file_put_contents('quotes.json', $quote, FILE_APPEND | LOCK_EX);
 	
-	$quotes = explode("\n", file_get_contents('quotes.txt'));
-	echo count($quotes);
-	die();
-}
+// 	$quotes = explode("\n", file_get_contents('quotes.json'));
+// 	echo count($quotes);
+// 	die();
+// }
 
-$quotes = file_get_contents('quotes.txt');
+$quotes = file_get_contents('quotes.json');
 $quotes = json_decode($quotes, true);
 $quotes = $quotes['quotes'];
 $numquotes = count($quotes);
@@ -55,13 +40,20 @@ function getQuote($quoteNo) {
 	}
 }
 
+// q = "API" call, 'quote' loads page on that specific quote ie for links
 if (isset($_GET['q']) && is_numeric($_GET['q']) && $_GET['q'] >= 0 && $_GET['q'] <= $numquotes) {
+
 	die(getQuote($_GET['q']));
+
 } else if (isset($url['q']) && is_numeric($url['q']) && $url['q'] >= 0 && $url['q'] <= $numquotes) {
+
 	die(getQuote($url['q']));
+
 } else {
 	if (isset($_GET['quote']) && is_numeric($_GET['quote']) && $_GET['quote'] >= 0 && $_GET['quote'] < $numquotes) {
+
 		$startingQuoteNo = $_GET['quote'];
+
 	} else if (isset($url['quote']) && is_numeric($url['quote']) && $url['quote'] >= 0 && $url['quote'] < $numquotes) {
 		$startingQuoteNo = $url['quote'];
 	} else {
